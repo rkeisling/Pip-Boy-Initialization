@@ -39,7 +39,7 @@ def disply_intro():
         time.sleep(0.05)
 
 def display_vault_boy():
-    img = 'vault_boy.jpeg'
+    img = 'images/vault_boy.jpeg'
     print_ascii(img)
 
 def print_one_by_one_with_sound(text, delay=0.25):
@@ -62,8 +62,8 @@ def print_one_by_one_some_sound(text, delay=0.001):
         time.sleep(delay)
 
 def play_random_sound():
-    sounds = ['short_type.wav', 'short_type2.wav',
-              'short_type3.wav', 'short_type4.wav',
+    sounds = ['sounds/short_type.wav', 'sounds/short_type2.wav',
+              'sounds/short_type3.wav', 'sounds/short_type4.wav',
               '', '', '', '', '', '', '']
     sound_to_play = random.choice(sounds)
     if sound_to_play == '':
@@ -71,7 +71,7 @@ def play_random_sound():
     playsound(sound_to_play)
 
 def play_success_sound():
-    playsound('ui_hacking_passgood.wav')
+    playsound('sounds/ui_hacking_passgood.wav')
 
 def make_starting_junk():
     keyphrases = [' start memory discovery', ' CPUO starting cell relocation',
