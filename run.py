@@ -2,10 +2,14 @@ import sys, time
 from playsound import playsound
 import random
 from threading import Thread
+from convert_image_to_ascii import print_ascii
 
 def main():
     display_starting_junk()
     disply_intro()
+    play_success_sound()
+    display_vault_boy()
+
 
 def display_starting_junk():
     for i in range(40):
@@ -33,6 +37,10 @@ def disply_intro():
     for i in range(30):
         print('\n')
         time.sleep(0.05)
+
+def display_vault_boy():
+    img = 'vault_boy.jpeg'
+    print_ascii(img)
 
 def print_one_by_one_with_sound(text, delay=0.25):
     for char in text:
@@ -62,8 +70,8 @@ def play_random_sound():
         return
     playsound(sound_to_play)
 
-def print_random_starting_junk():
-    print(foo)
+def play_success_sound():
+    playsound('ui_hacking_passgood.wav')
 
 def make_starting_junk():
     keyphrases = [' start memory discovery', ' CPUO starting cell relocation',
