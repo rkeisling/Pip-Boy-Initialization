@@ -1,7 +1,6 @@
 import npyscreen
 import random
-from consolemenu import *
-from consolemenu.items import *
+import os
 
 class VaultApp(npyscreen.NPSAppManaged):
     def onStart(self):
@@ -11,7 +10,6 @@ class VaultApp(npyscreen.NPSAppManaged):
 
     def change_form(self, name):
         self.switchForm(name)
-        self.resetHistory
 
 class myStartPipScreen(npyscreen.ActionForm):
     def afterEditing(self):
@@ -59,59 +57,40 @@ class pipMainScreen(npyscreen.ActionFormV2WithMenus):
         selection = self.option.get_selected_objects()[0]
         if (selection == 'INVENTORY'):
             npyscreen.notify_wait("ACCESSING INVENTORY...")
-
             self.parentApp.change_form('INV')
 
         else:
             npyscreen.notify_wait("I don't know how it got to this.")
 
 
-class inventoryPage(npyscreen.ActionFormV2WithMenus):
+class inventoryPage(npyscreen.FormWithMenus):
     def afterEditing(self):
-        self.parentApp.setNextForm(None)
+        self.parentApp.setNextForm('INV')
 
     def create(self):
-        #itemOne = baseballBat()
-        #self.inventoryMenu = self.new_menu(name="Inventory", shortcut="i")
+        self.itemOne = baseballBat()
+        self.itemTwo = knife()
+        self.items = [self.itemOne, self.itemTwo]
+        self.inventoryMenu = self.new_menu(name="Inventory")
+        self.createNewMenusForItems()
 
-        #self.itemOneMenu = self.inventoryMenu.addNewSubmenu(itemOne.name, "1", self.press_1)
-        #self.itemOneMenu.addItem("Equip", onSelect=itemOne.equip, shortcut="E")
-        #self.itemOneMenu.addItem("Repair", onSelect=itemOne.repair, shortcut="R")
-        #self.itemOneMenu.addItem("Drop", onSelect=itemOne.drop, shortcut="D")
-
-        #self.inventoryMenu.addItem("Knife", self.press_2, "2")
-        #self.inventoryMenu.addItem("Exit Inventory", self.exit_form, "^X")
-        showOtherMenu("Inventory", "This is inv")
-
-
-    def press_1(self):
-        npyscreen.notify_confirm("You have selected Baseball Bat.", "Baseball Bat", editw=1)
-
-    def press_2(self):
-        npyscreen.notify_confirm("You have selected Knife.", "Knife", editw=1)
+    def selectedMessage(self, nameOfItem):
+        npyscreen.notify_confirm("You have selected {0}.".format(nameOfItem), "{0}".format(nameOfItem), editw=1)
 
     def exit_form(self):
         self.parentApp.switchForm(None)
 
-def showOtherMenu(title, subtitle):
-    menu = ConsoleMenu(title, subtitle)
+    def createNewMenusForItems(self):
+        item_count = 1
+        for item in self.items:
+            if (item.count > 0):
+                self.item = self.inventoryMenu.addNewSubmenu(item.name, "{0}".format(item_count), self.selectedMessage, [item.name])
+                # TODO add refresh page to not show these if item.count > 0
+                self.item.addItem("Equip", onSelect=item.equip, shortcut="E")
+                self.item.addItem("Repair", onSelect=item.repair, shortcut="R")
+                self.item.addItem("Drop", onSelect=item.drop, shortcut="D")
+                item_count += 1
 
-    menu_item = MenuItem("Menu Item")
-
-    function_item = FunctionItem("Call a python function.", input, ["Enter an input"])
-
-    command_item = CommandItem("Run a console command!", "touch hello.txt")
-
-    selection_menu = SelectionMenu(["item1", "item2", "item3"])
-
-    submenu_item = SubmenuItem("Submenu item", selection_menu, menu)
-
-    menu.append_item(menu_item)
-    menu.append_item(function_item)
-    menu.append_item(command_item)
-    menu.append_item(submenu_item)
-
-    menu.show()
 
 class weapon:
     def drop(self):
@@ -150,7 +129,12 @@ class baseballBat(weapon):
         self.condition = 50
         self.equipped = False
 
-
+class knife(weapon):
+    def __init__(self):
+        self.name = "Knife"
+        self.count = 1
+        self.condition = 25
+        self.equipped = False
 
 #def pipFunc(*args):
 #    F = myStartPipScreen(name = "New Pip-Boy")
