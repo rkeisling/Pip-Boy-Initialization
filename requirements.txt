@@ -4,5 +4,5 @@
 #
 #    pip-compile
 #
-pillow==6.1.0
+pillow==9.0.1
 playsound==1.2.2
